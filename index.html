@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.4.0/chart.min.js"></script>
+    <style>
+        .container {
+            max-width: 40%;
+            margin: 50px auto 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <canvas id="myChart" width="400" height="400"></canvas>
+    </div>
+<script>
+var ctx = document.getElementById('myChart');
+var newLegendClickHandler = function (e, legendItem, legend) {
+    var index = legendItem.datasetIndex;
+    var lend = legend.legendItems;
+    const ci = legend.chart;
+    
+    if (ci.isDatasetVisible(index)) {
+        ci.hide(index);
+        legendItem.hidden = true;
+    } else {
+        ci.show(index);
+        legendItem.hidden = false;
+    }
+    var num = 0;
+    lend.forEach(function(obj) {
+        if(!obj.hidden) {
+            num++;
+        }
+    }) 
+    //Conditions to display scale
+    if (num == 1) {
+        console.log("inside 1");
+        ci.config.options.scales["left-y-axis"].display = true; 
+        ci.config.options.scales["right-y-axis"].display = false;
+    }else if (num == 2) {
+        console.log("inside 2");
+        ci.config.options.scales["left-y-axis"].display = true; 
+        ci.config.options.scales["right-y-axis"].display = true;
+    } else {
+        console.log("else");
+        ci.config.options.scales["left-y-axis"].display = false; 
+        ci.config.options.scales["right-y-axis"].display = false;
+    }
+    ci.update();
+}
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        datasets: [
+        {
+        label: 'A# of Votes',
+        data: [12, 8, 10, 5, 2, 3],
+        fill: false,
+        backgroundColor: 'rgb(255, 99, 132)',
+        borderColor: 'rgba(255, 99, 132, 0.9)',
+        yAxisID: 'left-y-axis'
+      },
+      {
+        label: 'B# of Votes',
+        data: [19, 9, 2, 1, 4, 21],
+        fill: false,
+        backgroundColor: 'rgb(122, 99, 255)',
+        borderColor: 'rgba(102, 99, 255, 0.9)',
+        yAxisID: 'left-y-axis'
+      },
+      {
+        label: 'C# of Votes',
+        data: [5, 8, 6, 15, 12, 13],
+        fill: false,
+        backgroundColor: 'rgb(76, 223, 118)',
+        borderColor: 'rgba(83, 226, 76, 0.9)',
+        yAxisID: 'left-y-axis'
+      },
+      {
+        label: 'D# of Votes',
+        data: [0, 4, 7, 2, 16, 20],
+        fill: false,
+        backgroundColor: 'rgb(200, 187, 41)',
+        borderColor: 'rgba(229, 223, 67, 0.9)',
+        yAxisID: 'left-y-axis'
+      }
+    ]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                onClick: newLegendClickHandler
+            }
+        },
+        scales: {
+            'left-y-axis': {
+                type: 'linear',
+                position: 'left',
+                display: false
+            },
+            'right-y-axis': {
+                type: 'linear',
+                position: 'right',
+                display: false
+            }
+        }
+    }
+});
+</script>
+</body>
+</html>
